@@ -15,12 +15,9 @@ function requestHandler(req, res)
     var url = require('url');
     var url_parts = url.parse(req.url, true);
     var query = url_parts.query;
-    
     res.writeHead(200, {'Content-Type': 'application/json'});
-    
     if (query['cmd'] == undefined)
       throw Error("A command must be specified");
-      
     var result = {};
     if (query['cmd'] == 'calcDistance')
     {
@@ -34,7 +31,6 @@ function requestHandler(req, res)
     {
       throw Error("Invalid command: " + query['cmd']);
     }
- 
     res.write(JSON.stringify(result));
     res.end('');
   }
@@ -48,32 +44,30 @@ function requestHandler(req, res)
 
 function calcDistance(query)
 {
-   if(isNaN(query['budget'])||!typeof(query['budget'] == 'number'))
-      throw Error("Invalid value for budget");
-   if(isNaN(query['mpg'])||!typeof(query['mpg'] == 'number'))
+    if(isNaN(query['budget'])||query['budget'] <= 0)
+      throw Error("Invalid value for budget");    
+    if(isNaN(query['mpg'])||query['mpg'] <= 0)
       throw Error("Invalid value for mpg"); 
-   if(isNaN(query['fuelCost'])||!typeof(query['fuelCost'] == 'number')||parseInt(query['checks']) < 0)
-      throw Error("Invalid value for fuelCost");      
-
-  var distance = 0;
-  distance = (query['budget'] / query['fuelCost']) * query['mpg'];
-    
-  var result = {'distance' : distance}; 
-  return result;
+    if(isNaN(query['fuelCost'])||query['fuelCost'] <= 0)
+      throw Error("Invalid value for fuelCost");
+    //---LOGIC
+    var distance = (query['budget'] / query['fuelCost']) * query['mpg'];
+    //-------------
+    var result = {'distance' : distance}; 
+    return result;
 }
 
 function calcCost(query)
 {
-   if(isNaN(query['distance'])||query['distance'] < 0)
+    if(isNaN(query['distance'])||query['distance'] <= 0)
       throw Error("Invalid value for distance");    
-   if(isNaN(query['mpg'])||!typeof(query['mpg'] == 'number')||query['mpg'] < 0)
+    if(isNaN(query['mpg'])||query['mpg'] <= 0)
       throw Error("Invalid value for mpg"); 
-   if(isNaN(query['fuelCost'])||!typeof(query['fuelCost'] == 'number')||query['fuelCost'] < 0)
-      throw Error("Invalid value for fuelCost");      
-
-  var tripCost = 0;
-  tripCost = (query['distance'] / query['mpg']) * query['fuelCost'];
-    
-  var result = {'cost' : tripCost}; 
-  return result;
+    if(isNaN(query['fuelCost'])||query['fuelCost'] <= 0)
+      throw Error("Invalid value for fuelCost");
+    //---LOGIC
+    var tripCost = (query['distance'] / query['mpg']) * query['fuelCost'];
+    //-----------------------------------------
+    var result = {'cost' : tripCost}; 
+    return result;
 }
