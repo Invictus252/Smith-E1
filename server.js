@@ -64,11 +64,11 @@ function calcDistance(query)
 
 function calcCost(query)
 {
-   if(isNaN(query['distance'])||!typeof(query['budget'] == 'number'))
-      throw Error("Invalid value for budget");
-   if(isNaN(query['mpg'])||!typeof(query['mpg'] == 'number'))
+   if(isNaN(query['distance'])||query['distance'] < 0)
+      throw Error("Invalid value for distance");    
+   if(isNaN(query['mpg'])||!typeof(query['mpg'] == 'number')||query['mpg'] < 0)
       throw Error("Invalid value for mpg"); 
-   if(isNaN(query['fuelCost'])||!typeof(query['fuelCost'] == 'number')||parseInt(query['checks']) < 0)
+   if(isNaN(query['fuelCost'])||!typeof(query['fuelCost'] == 'number')||query['fuelCost'] < 0)
       throw Error("Invalid value for fuelCost");      
 
   var tripCost = 0;
